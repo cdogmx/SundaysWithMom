@@ -60,7 +60,6 @@ To set up:
 - React 18
 - Vite
 - Tailwind CSS
-- Base44 SDK
 - React Router
 - TanStack Query
 # SundaysWithMom

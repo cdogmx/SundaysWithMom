@@ -6,7 +6,7 @@ import { Heart, MessageCircle, Share2, MapPin, Clock, Flag } from "lucide-react"
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
+import { stubAPI as base44 } from "@/api/stubs";
 import CommentSection from "./CommentSection";
 import ReportDialog from "@/components/ReportDialog";
 

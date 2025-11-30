@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from "@/api/base44Client";
+import { stubAPI as base44 } from "@/api/stubs";
 import { Button } from "@/components/ui/button";
 import { UserPlus, UserCheck, Loader2 } from "lucide-react";
 import { toast } from "sonner";

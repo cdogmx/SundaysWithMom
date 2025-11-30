@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
+import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -18,29 +18,15 @@ import {
 import NotificationBell from "@/components/notifications/NotificationBell";
 
 export default function Layout({ children, currentPageName }) {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isAuthenticated, isLoading: isLoadingAuth, logout, navigateToLogin } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    const isAuth = await base44.auth.isAuthenticated();
-    if (isAuth) {
-      const userData = await base44.auth.me();
-      setUser(userData);
-    }
-    setIsLoading(false);
-  };
-
   const handleLogin = () => {
-    base44.auth.redirectToLogin(window.location.href);
+    navigateToLogin();
   };
 
   const handleLogout = () => {
-    base44.auth.logout(createPageUrl('Home'));
+    logout(true);
   };
 
   const navLinks = [
@@ -87,9 +73,9 @@ export default function Layout({ children, currentPageName }) {
 
             {/* User Actions */}
             <div className="flex items-center gap-3">
-              {!isLoading && (
+              {!isLoadingAuth && (
                 <>
-                  {user ? (
+                  {isAuthenticated && user ? (
                             <>
                               <NotificationBell user={user} />
                               <Link to={createPageUrl('AddLocation')} className="hidden md:block">

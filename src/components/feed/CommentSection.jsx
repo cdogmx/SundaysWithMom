@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Send, Loader2 } from "lucide-react";
 import { format } from "date-fns";
-import { base44 } from "@/api/base44Client";
+import { stubAPI as base44 } from "@/api/stubs";
 
 export default function CommentSection({ activityId, currentUser }) {
   const [comments, setComments] = useState([]);

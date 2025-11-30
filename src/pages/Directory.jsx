@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from "@/api/base44Client";
+import { stubAPI as base44 } from "@/api/stubs";
 import { Input } from "@/components/ui/input";
 import { Loader2, Search, MapPin, Clock } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
