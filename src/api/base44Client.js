@@ -16,9 +16,12 @@ if (typeof window !== 'undefined') {
   // Override console.error to filter Base44 connection errors
   console.error = function(...args) {
     const errorString = args.join(' ');
-    // Filter out Base44 SDK connection errors
+    // Filter out Base44 SDK connection errors (including WebSocket errors)
     if (errorString.includes('connect_error') || 
-        (errorString.includes('server error') && errorString.includes('index-'))) {
+        (errorString.includes('server error') && errorString.includes('index-')) ||
+        errorString.includes('websocket error') ||
+        errorString.includes('WebSocket connection') ||
+        (errorString.includes('ws-user-apps/socket.io') && errorString.includes('failed'))) {
       // Suppress these specific Base44 SDK connection errors
       return;
     }
@@ -29,7 +32,9 @@ if (typeof window !== 'undefined') {
   console.warn = function(...args) {
     const warnString = args.join(' ');
     if (warnString.includes('connect_error') || 
-        (warnString.includes('server error') && warnString.includes('index-'))) {
+        (warnString.includes('server error') && warnString.includes('index-')) ||
+        warnString.includes('websocket error') ||
+        warnString.includes('WebSocket connection')) {
       return;
     }
     originalConsoleWarn.apply(console, args);

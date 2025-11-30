@@ -55,7 +55,8 @@ export default function Messages() {
     setUser(userData);
 
     const allConvos = await base44.entities.Conversation.list('-last_message_date');
-    const myConvos = allConvos.filter(c => c.participant_emails?.includes(userData.email));
+    const conversations = Array.isArray(allConvos) ? allConvos : [];
+    const myConvos = conversations.filter(c => c && c.participant_emails?.includes(userData.email));
     setConversations(myConvos);
     setIsLoading(false);
   };
@@ -63,20 +64,22 @@ export default function Messages() {
   const loadMessages = async () => {
     if (!selectedConvo) return;
     const msgs = await base44.entities.Message.filter({ conversation_id: selectedConvo.id }, 'created_date');
-    setMessages(msgs);
+    const messages = Array.isArray(msgs) ? msgs : [];
+    setMessages(messages);
 
     // Mark messages as read
-    const unreadMsgs = msgs.filter(m => !m.is_read && m.sender_email !== user.email);
+    const unreadMsgs = messages.filter(m => m && !m.is_read && m.sender_email !== user.email);
     await Promise.all(unreadMsgs.map(m => base44.entities.Message.update(m.id, { is_read: true })));
   };
 
   const selectConversation = async (convo) => {
     setSelectedConvo(convo);
     const msgs = await base44.entities.Message.filter({ conversation_id: convo.id }, 'created_date');
-    setMessages(msgs);
+    const messages = Array.isArray(msgs) ? msgs : [];
+    setMessages(messages);
 
     // Mark as read
-    const unreadMsgs = msgs.filter(m => !m.is_read && m.sender_email !== user.email);
+    const unreadMsgs = messages.filter(m => m && !m.is_read && m.sender_email !== user.email);
     await Promise.all(unreadMsgs.map(m => base44.entities.Message.update(m.id, { is_read: true })));
   };
 

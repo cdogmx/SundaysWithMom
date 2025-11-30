@@ -74,9 +74,10 @@ export default function Profile() {
     setMyReports(reports);
     
     // Count unread messages
-    const myConvos = allConvos.filter(c => c.participant_emails?.includes(userData.email));
-    const unread = allMessages.filter(m => 
-      myConvos.some(c => c.id === m.conversation_id) && 
+    const myConvos = Array.isArray(allConvos) ? allConvos.filter(c => c && c.participant_emails?.includes(userData.email)) : [];
+    const messages = Array.isArray(allMessages) ? allMessages : [];
+    const unread = messages.filter(m => 
+      m && myConvos.some(c => c.id === m.conversation_id) && 
       !m.is_read && 
       m.sender_email !== userData.email
     ).length;

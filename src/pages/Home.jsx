@@ -22,15 +22,23 @@ export default function Home() {
   const loadData = async () => {
     setIsLoading(true);
     
-    const [activitiesData, locationsData, eventsData] = await Promise.all([
-      base44.entities.FeedActivity.list('-created_date', 20),
-      base44.entities.Location.filter({ is_approved: true }, '-created_date', 6),
-      base44.entities.Event.filter({ is_approved: true }, 'start_date', 4)
-    ]);
-    
-    setActivities(activitiesData);
-    setFeaturedLocations(locationsData);
-    setUpcomingEvents(eventsData.filter(e => new Date(e.end_date) >= new Date()));
+    try {
+      const [activitiesData, locationsData, eventsData] = await Promise.all([
+        base44.entities.FeedActivity.list('-created_date', 20),
+        base44.entities.Location.filter({ is_approved: true }, '-created_date', 6),
+        base44.entities.Event.filter({ is_approved: true }, 'start_date', 4)
+      ]);
+      
+      setActivities(Array.isArray(activitiesData) ? activitiesData : []);
+      setFeaturedLocations(Array.isArray(locationsData) ? locationsData : []);
+      const events = Array.isArray(eventsData) ? eventsData : [];
+      setUpcomingEvents(events.filter(e => e && e.end_date && new Date(e.end_date) >= new Date()));
+    } catch (error) {
+      console.error('Error loading data:', error);
+      setActivities([]);
+      setFeaturedLocations([]);
+      setUpcomingEvents([]);
+    }
     
     const isAuth = await base44.auth.isAuthenticated();
     if (isAuth) {
